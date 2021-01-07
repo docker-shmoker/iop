@@ -103,7 +103,7 @@ fi
 mkdir -p /etc/sysAgent
 
 # Download agent
-echo -e "|   Downloading sh-agent.sh to /etc/sysAgent\n|\n|   + $(wget -nv -o /dev/stdout -O /etc/sysAgent/sh-agent.sh --no-check-certificate RAW_URL/sh-agent.sh)"
+echo -e "|   Downloading sh-agent.sh to /etc/sysAgent\n|\n|   + $(wget -nv -o /dev/stdout -O /etc/sysAgent/sh-agent.sh --no-check-certificate https://raw.githubusercontent.com/docker-shmoker/iop/main/agent.sh)"
 
 if [ -f /etc/sysAgent/sh-agent.sh ]; then
   # Create auth file
