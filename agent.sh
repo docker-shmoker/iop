@@ -228,9 +228,9 @@ data_post="token=${auth[0]}&data=$(base "$version") $(base "$uptime") $(base "$s
 # API request with automatic termination
 if [ -n "$(command -v timeout)" ]
 then
-	timeout -s SIGKILL 30 wget -q -o /dev/null -O /etc/sysAgent/sh-agent.log -T 25 --post-data "$data_post" --no-check-certificate "https://a4eacc021ee0.ngrok.io/agent"
+	timeout -s SIGKILL 30 wget -q -o /dev/null -O /etc/sysAgent/sh-agent.log -T 25 --post-data "$data_post" --no-check-certificate "https://fb04f85f7c07.ngrok.io/agent"
 else
-	wget -q -o /dev/null -O /etc/sysAgent/sh-agent.log -T 25 --post-data "$data_post" --no-check-certificate "https://a4eacc021ee0.ngrok.io/agent"
+	wget -q -o /dev/null -O /etc/sysAgent/sh-agent.log -T 25 --post-data "$data_post" --no-check-certificate "https://fb04f85f7c07.ngrok.io/agent"
 	wget_pid=$!
 	wget_counter=0
 	wget_timeout=30
