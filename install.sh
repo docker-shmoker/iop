@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# sysAgent
+# syAgent
 #
 # @version		1.0.0
 # @date			2021-01-07
@@ -8,7 +8,7 @@
 # set env
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-echo -e "|\n|   Agent Installer\n|   =========\n|"
+echo -e "|\n|   SyAgent Installer\n|   =========\n|"
 
 # is root?
 if [ $(id -u) != "0" ]; then
@@ -87,45 +87,45 @@ if [ -z "$(ps -Al | grep cron | grep -v grep)" ]; then
 fi
 
 # Attempt to delete previous agent
-if [ -f /etc/sysAgent/sh-agent.sh ]; then
+if [ -f /etc/syAgent/sh-sh-agent.sh ]; then
   # Remove agent dir
-  rm -Rf /etc/sysAgent
+  rm -Rf /etc/syAgent
 
   # Remove cron entry and user
-  if id -u sysAgent >/dev/null 2>&1; then
-    (crontab -u sysAgent -l | grep -v "/etc/sysAgent/sh-agent.sh") | crontab -u sysAgent - && userdel sysAgent
+  if id -u syAgent >/dev/null 2>&1; then
+    (crontab -u syAgent -l | grep -v "/etc/syAgent/sh-agent.sh") | crontab -u syAgent - && userdel syAgent
   else
-    (crontab -u root -l | grep -v "/etc/sysAgent/sh-agent.sh") | crontab -u root -
+    (crontab -u root -l | grep -v "/etc/syAgent/sh-agent.sh") | crontab -u root -
   fi
 fi
 
 # Create agent dir
-mkdir -p /etc/sysAgent
+mkdir -p /etc/syAgent
 
 # Download agent
-echo -e "|   Downloading sh-agent.sh to /etc/sysAgent\n|\n|   + $(wget -nv -o /dev/stdout -O /etc/sysAgent/sh-agent.sh --no-check-certificate https://raw.githubusercontent.com/docker-shmoker/iop/main/agent.sh)"
+echo -e "|   Downloading sh-agent.sh to /etc/syAgent\n|\n|   + $(wget -nv -o /dev/stdout -O /etc/syAgent/sh-sh-agent.sh --no-check-certificate https://raw.githubusercontent.com/docker-shmoker/iop/main/sh-agent.sh)"
 
-if [ -f /etc/sysAgent/sh-agent.sh ]; then
+if [ -f /etc/syAgent/sh-sh-agent.sh ]; then
   # Create auth file
-  echo "$1" >/etc/sysAgent/sa-auth.log
+  echo "$1" >/etc/syAgent/sa-auth.log
 
   # Create user
-  useradd sysAgent -r -d /etc/sysAgent -s /bin/false
+  useradd syAgent -r -d /etc/syAgent -s /bin/false
 
   # Modify user permissions
-  chown -R sysAgent:sysAgent /etc/sysAgent && chmod -R 700 /etc/sysAgent
+  chown -R syAgent:syAgent /etc/syAgent && chmod -R 700 /etc/syAgent
 
   # Modify ping permissions
   chmod +s $(type -p ping)
 
   # Configure cron
-  crontab -u sysAgent -l 2>/dev/null | {
+  crontab -u syAgent -l 2>/dev/null | {
     cat
-    echo "*/1 * * * * bash /etc/sysAgent/sh-agent.sh > /etc/sysAgent/nq-cron.log 2>&1"
-  } | crontab -u sysAgent -
+    echo "*/1 * * * * bash /etc/syAgent/sh-agent.sh > /etc/syAgent/sh-cron.log 2>&1"
+  } | crontab -u syAgent -
 
   # Show success
-  echo -e "|\n|   Success: The sysAgent agent has been installed\n|"
+  echo -e "|\n|   Success: The syAgent agent has been installed\n|"
 
   # Attempt to delete installation script
   if [ -f $0 ]; then
@@ -133,5 +133,5 @@ if [ -f /etc/sysAgent/sh-agent.sh ]; then
   fi
 else
   # Show error
-  echo -e "|\n|   Error: The sysAgent agent could not be installed\n|"
+  echo -e "|\n|   Error: The syAgent agent could not be installed\n|"
 fi

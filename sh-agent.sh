@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+# syAgent
 # @version		1.0.0
 # @date			2021-01-14
 
@@ -8,12 +8,12 @@
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # Agent version
-version="1.0.0"
+version="1.0.1"
 
 # Authentication required
-if [ -f /etc/sysAgent/sa-auth.log ]
+if [ -f /etc/syAgent/sa-auth.log ]
 then
-	auth=($(cat /etc/sysAgent/sa-auth.log))
+	auth=($(cat /etc/syAgent/sa-auth.log))
 else
 	echo "Error: Authentication file is missing."
 	exit 1
@@ -179,9 +179,9 @@ cpu=$((${stat[0]}+${stat[1]}+${stat[2]}+${stat[3]}))
 io=$((${stat[3]}+${stat[4]}))
 idle=${stat[3]}
 
-if [ -e /etc/sysAgent/nq-data.log ]
+if [ -e /etc/syAgent/pe-data.log ]
 then
-	data=($(cat /etc/sysAgent/nq-data.log))
+	data=($(cat /etc/syAgent/pe-data.log))
 	interval=$(($time-${data[0]}))
 	cpu_gap=$(($cpu-${data[1]}))
 	io_gap=$(($io-${data[2]}))
@@ -209,7 +209,7 @@ then
 fi
 
 # System load cache
-echo "$time $cpu $io $idle $rx $tx" > /etc/sysAgent/nq-data.log
+echo "$time $cpu $io $idle $rx $tx" > /etc/syAgent/pe-data.log
 
 # Prepare load variables
 rx_gap=$(prep $(num "$rx_gap"))
@@ -218,9 +218,9 @@ load_cpu=$(prep $(num "$load_cpu"))
 load_io=$(prep $(num "$load_io"))
 
 # Get network latency
-ping_eu=$(prep $(num "$(ping -c 2 -w 2 ping-eu.sysAgent.com | grep rtt | cut -d'/' -f4 | awk '{ print $3 }')"))
-ping_us=$(prep $(num "$(ping -c 2 -w 2 ping-us.sysAgent.com | grep rtt | cut -d'/' -f4 | awk '{ print $3 }')"))
-ping_as=$(prep $(num "$(ping -c 2 -w 2 ping-as.sysAgent.com | grep rtt | cut -d'/' -f4 | awk '{ print $3 }')"))
+ping_eu=$(prep $(num "$(ping -c 2 -w 2 ping-eu.syagent.com | grep rtt | cut -d'/' -f4 | awk '{ print $3 }')"))
+ping_us=$(prep $(num "$(ping -c 2 -w 2 ping-us.syagent.com | grep rtt | cut -d'/' -f4 | awk '{ print $3 }')"))
+ping_as=$(prep $(num "$(ping -c 2 -w 2 ping-as.syagent.com | grep rtt | cut -d'/' -f4 | awk '{ print $3 }')"))
 
 # Build data for post
 data_post="token=${auth[0]}&data=$(base "$version") $(base "$uptime") $(base "$sessions") $(base "$processes") $(base "$processes_array") $(base "$file_handles") $(base "$file_handles_limit") $(base "$os_kernel") $(base "$os_name") $(base "$os_arch") $(base "$cpu_name") $(base "$cpu_cores") $(base "$cpu_freq") $(base "$ram_total") $(base "$ram_usage") $(base "$swap_total") $(base "$swap_usage") $(base "$disk_array") $(base "$disk_total") $(base "$disk_usage") $(base "$connections") $(base "$nic") $(base "$ipv4") $(base "$ipv6") $(base "$rx") $(base "$tx") $(base "$rx_gap") $(base "$tx_gap") $(base "$load") $(base "$load_cpu") $(base "$load_io") $(base "$ping_eu") $(base "$ping_us") $(base "$ping_as")"
@@ -228,9 +228,9 @@ data_post="token=${auth[0]}&data=$(base "$version") $(base "$uptime") $(base "$s
 # API request with automatic termination
 if [ -n "$(command -v timeout)" ]
 then
-	timeout -s SIGKILL 30 wget -q -o /dev/null -O /etc/sysAgent/sh-agent.log -T 25 --post-data "$data_post" --no-check-certificate "https://40461502a7d2.ngrok.io/agent"
+	timeout -s SIGKILL 30 wget -q -o /dev/null -O /etc/syAgent/sh-agent.log -T 25 --post-data "$data_post" --no-check-certificate "https://agent.syagent.com/agent"
 else
-	wget -q -o /dev/null -O /etc/sysAgent/sh-agent.log -T 25 --post-data "$data_post" --no-check-certificate "https://40461502a7d2.ngrok.io/agent"
+	wget -q -o /dev/null -O /etc/syAgent/sh-agent.log -T 25 --post-data "$data_post" --no-check-certificate "https://agent.syagent.com/agent"
 	wget_pid=$!
 	wget_counter=0
 	wget_timeout=30
