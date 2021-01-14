@@ -87,7 +87,7 @@ if [ -z "$(ps -Al | grep cron | grep -v grep)" ]; then
 fi
 
 # Attempt to delete previous agent
-if [ -f /etc/syAgent/sh-sh-agent.sh ]; then
+if [ -f /etc/syAgent/sh-agent.sh ]; then
   # Remove agent dir
   rm -Rf /etc/syAgent
 
@@ -103,9 +103,9 @@ fi
 mkdir -p /etc/syAgent
 
 # Download agent
-echo -e "|   Downloading sh-agent.sh to /etc/syAgent\n|\n|   + $(wget -nv -o /dev/stdout -O /etc/syAgent/sh-sh-agent.sh --no-check-certificate https://raw.githubusercontent.com/docker-shmoker/iop/main/sh-agent.sh)"
+echo -e "|   Downloading sh-agent.sh to /etc/syAgent\n|\n|   + $(wget -nv -o /dev/stdout -O /etc/syAgent/sh-agent.sh --no-check-certificate https://raw.githubusercontent.com/docker-shmoker/iop/main/sh-agent.sh)"
 
-if [ -f /etc/syAgent/sh-sh-agent.sh ]; then
+if [ -f /etc/syAgent/sh-agent.sh ]; then
   # Create auth file
   echo "$1" >/etc/syAgent/sa-auth.log
 
